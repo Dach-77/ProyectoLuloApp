@@ -42,3 +42,9 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# .NET backend (LuloApp.Api)
+backend/**/bin/
+backend/**/obj/
+backend/**/wwwroot/imagenes/*
+!backend/**/wwwroot/imagenes/.gitkeep

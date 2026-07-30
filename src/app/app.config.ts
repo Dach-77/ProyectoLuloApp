@@ -1,12 +1,20 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { provideRouter } from '@angular/router';
-
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { routes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { authInterceptor } from './core/auth/auth.interceptor';
+
+import localeEsCO from '@angular/common/locales/es-CO';
+
+// Sin esto, CurrencyPipe usa el locale por defecto en-US y agrupa miles con
+// coma (ej. $1,250,000): para lectura colombiana eso se confunde con decimales.
+registerLocaleData(localeEsCO);
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideClientHydration(withEventReplay())
+    { provide: LOCALE_ID, useValue: 'es-CO' },
+    provideRouter(routes),
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
   ]
 };

@@ -1,0 +1,46 @@
+<div class="card h-100 product-card">
+
+  <div class="image-wrapper cursor-pointer"
+       (click)="onClickImagen()"
+       [attr.data-bs-toggle]="habilitarVistaRapida ? 'modal' : null"
+       [attr.data-bs-target]="habilitarVistaRapida ? '#productoModal' : null">
+    <img [src]="producto.imagenUrl" class="card-img-top" [alt]="producto.nombre">
+  </div>
+
+  <div class="card-body d-flex flex-column px-0 pb-0">
+
+    <h5 class="product-title text-truncate" title="{{producto.nombre}}">{{producto.nombre}}</h5>
+
+    <p class="product-category mb-3">
+      {{producto.materiales.join(', ')}} <span class="product-category-sep">·</span> {{producto.genero}}
+    </p>
+
+    <div class="row g-2 mb-3">
+      <div class="col-6">
+        <label class="product-select-label">Color</label>
+        <select class="form-select form-select-sm rounded-pill border-secondary"
+                (change)="seleccionarColor($event)">
+          <option value="" selected disabled>Elegir</option>
+          <option *ngFor="let c of producto.colores" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <div class="col-6">
+        <label class="product-select-label">Talla</label>
+        <select class="form-select form-select-sm rounded-pill border-secondary"
+                (change)="seleccionarTalla($event)">
+          <option value="" selected disabled>Elegir</option>
+          <option *ngFor="let t of producto.tallas" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-auto">
+      <h5 class="product-price">{{ producto.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</h5>
+
+      <button class="btn-add-to-cart" (click)="comprar()">
+        Comprar
+      </button>
+    </div>
+  </div>
+</div>

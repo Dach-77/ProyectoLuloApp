@@ -1,0 +1,53 @@
+<div class="lulo-panel p-4 p-md-5">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold mb-0">Productos existentes</h4>
+    <span class="lulo-count-badge">{{ productos.length }} producto(s)</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle lulo-table">
+      <thead>
+        <tr>
+          <th>Foto</th>
+          <th>Nombre</th>
+          <th>Código</th>
+          <th>Género</th>
+          <th>Precio</th>
+          <th>Stock (talla/color)</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos" [class.opacity-50]="!producto.activo">
+          <td><img [src]="producto.imagenUrl" [alt]="producto.nombre" width="48" height="48" class="rounded-3 object-fit-cover border"></td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.codigo }}</td>
+          <td>{{ producto.genero }}</td>
+          <td>{{ producto.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+          <td>
+            <div class="d-flex flex-wrap gap-1" style="max-width: 280px;">
+              <span class="badge bg-light border" [class.text-dark]="s.cantidad > 0" [class.text-danger]="s.cantidad === 0"
+                    *ngFor="let s of producto.stock">
+                {{ s.talla }}/{{ s.color }}: {{ s.cantidad }}
+              </span>
+              <span class="text-muted small" *ngIf="!producto.stock.length">Sin stock definido</span>
+            </div>
+          </td>
+          <td>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch"
+                     [checked]="producto.activo" (change)="cambiarEstado.emit(producto)">
+              <label class="form-check-label small">{{ producto.activo ? 'Activo' : 'Inactivo' }}</label>
+            </div>
+          </td>
+          <td class="text-end">
+            <button type="button" class="btn btn-sm btn-outline-dark rounded-pill" (click)="editar.emit(producto)">
+              Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

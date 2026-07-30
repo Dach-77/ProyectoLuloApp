@@ -1,0 +1,41 @@
+<div class="container mt-4 mb-5">
+
+  <div class="admin-header mb-4">
+    <h1 class="fw-bold mb-1">Panel de administración</h1>
+    <p class="text-muted mb-0">Gestiona el catálogo, el inventario y la disponibilidad de tus productos.</p>
+  </div>
+
+  <ul class="nav nav-tabs lulo-tabs mb-4">
+    <li class="nav-item">
+      <button #tabBtnCrear id="tab-btn-crear" class="nav-link active" type="button" data-bs-toggle="tab" data-bs-target="#tab-crear">
+        ✏️ Crear / Editar
+      </button>
+    </li>
+    <li class="nav-item">
+      <button id="tab-btn-inventario" class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#tab-inventario">
+        📦 Inventario
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <div class="tab-pane fade show active" id="tab-crear">
+      <app-producto-form
+        [productoEditado]="productoEnEdicion"
+        (guardar)="guardar($event)"
+        (cancelar)="cancelarEdicion()"
+        (eliminar)="eliminarProducto()">
+      </app-producto-form>
+    </div>
+
+    <div class="tab-pane fade" id="tab-inventario">
+      <app-inventario-tabla
+        [productos]="(productos$ | async) ?? []"
+        (editar)="editarProducto($event)"
+        (cambiarEstado)="cambiarEstado($event)">
+      </app-inventario-tabla>
+    </div>
+
+  </div>
+</div>

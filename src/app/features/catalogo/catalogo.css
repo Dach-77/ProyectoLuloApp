@@ -1,0 +1,9 @@
+/* Tono hueso para las cajas del catálogo (el fondo general de la app sigue en arena) */
+:host {
+  --card-bg: #F8F3E7;
+}
+
+.filtros-card {
+  border-radius: 16px;
+  background-color: var(--card-bg);
+}

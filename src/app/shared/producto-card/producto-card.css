@@ -1,0 +1,81 @@
+/* 1. Contenedor Principal de la Tarjeta */
+.product-card {
+    border: none; /* Quitamos los bordes duros de Bootstrap */
+    border-radius: 12px; /* Esquinas más suaves */
+    overflow: hidden;
+    /* --card-bg la puede sobreescribir un componente padre (ej. Catálogo, tono hueso) */
+    background-color: var(--card-bg, #fff);
+    /* MÁS AIRE interno */
+    padding: 1.5rem; /* Aumentamos el padding para sofisticación */
+
+    /* Efecto base de profundidad */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Sombra sutil base */
+}
+
+/* MICRO-INTERACCIÓN SENIOR: Elevación en hover */
+.product-card:hover {
+    transform: translateY(-8px); /* Elevación suave */
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1); /* Sombra más profunda */
+}
+
+/* 2. Imagen (mantén tus bordes redondeados) */
+.product-card img {
+    border-radius: 10px;
+    margin-bottom: 1.25rem; /* Más espacio con el texto */
+    width: 100%;
+    height: auto;
+}
+
+/* 3. Textos */
+.product-category {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #8a8a72; /* Gris cálido, en línea con la paleta orgánica */
+    letter-spacing: 0.05em; /* Un poco de espaciado entre letras */
+}
+
+.product-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--lulo-ink);
+    margin-bottom: 0.35rem;
+}
+
+.product-category-sep {
+    opacity: 0.6;
+}
+
+.product-select-label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8a8a72;
+    margin-bottom: 0.2rem;
+}
+
+.product-price {
+    font-weight: 600;
+    color: var(--lulo-olive-dark);
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+}
+
+/* 4. Botón Agregar al Carrito (estilo píldora ancho) */
+.btn-add-to-cart {
+    border-radius: 25px; /* Estilo 'píldora' total */
+    width: 100%; /* Ocupa más espacio, mejor UX */
+    background-color: var(--lulo-olive);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.5rem; /* Más alto, mejor touch-target */
+    transition: background-color 0.2s;
+}
+
+/* Micro-interacción hover en el botón */
+.btn-add-to-cart:hover {
+    background-color: var(--lulo-olive-dark);
+}

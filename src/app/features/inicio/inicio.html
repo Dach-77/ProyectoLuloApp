@@ -1,0 +1,68 @@
+<!-- Módulo 1: Bienvenida -->
+<section class="hero-banner d-flex align-items-center">
+  <div class="container position-relative text-center text-white py-5">
+    <h1 class="fw-bold display-5 mb-3">Bienvenido a LuloApp</h1>
+    <p class="lead mb-4 mx-auto hero-descripcion">
+      Prendas pensadas para cada temporada: materiales nobles, tallas para toda la familia
+      y un estilo que combina con tu día a día.
+    </p>
+    <a routerLink="/catalogo" class="btn btn-success btn-lg rounded-pill px-5 fw-bold">
+      Ver Catálogo
+    </a>
+  </div>
+</section>
+
+<!-- Módulo 2: Últimos productos agregados -->
+<section class="container my-5">
+  <h2 class="fw-bold mb-4 text-center">Últimos productos agregados</h2>
+
+  <div *ngIf="gruposCarrusel().length; else sinProductos"
+       id="carruselRecientes" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item" *ngFor="let grupo of gruposCarrusel(); let i = index" [class.active]="i === 0">
+        <div class="row g-4 px-1 px-md-5">
+          <div class="col-6 col-md-3" *ngFor="let producto of grupo">
+            <app-producto-card [producto]="producto" [habilitarVistaRapida]="false"></app-producto-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="gruposCarrusel().length > 1">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carruselRecientes" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carruselRecientes" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </button>
+    </ng-container>
+  </div>
+
+  <ng-template #sinProductos>
+    <p class="text-center text-muted">Todavía no hay productos para mostrar.</p>
+  </ng-template>
+</section>
+
+<!-- Módulo 3: Temporadas -->
+<section class="container my-5 mb-5">
+  <h2 class="fw-bold mb-4 text-center">Compra por Temporada</h2>
+  <div class="row g-2 g-md-3">
+    <div class="col-6 col-md" *ngFor="let t of temporadaCards()">
+      <a [routerLink]="['/catalogo']" [queryParams]="{ temporada: t.nombre }" class="temporada-tile d-block text-decoration-none">
+        <div class="temporada-imagen-wrapper">
+          <img *ngIf="t.imagenUrl as url; else sinImagenTemporada"
+               [src]="url" [alt]="t.nombre" class="temporada-imagen">
+          <ng-template #sinImagenTemporada>
+            <div class="temporada-imagen temporada-imagen--vacia d-flex align-items-center justify-content-center">
+              <span class="temporada-icono">{{ t.icono }}</span>
+            </div>
+          </ng-template>
+        </div>
+        <div class="temporada-caption">
+          <span class="temporada-nombre">Colección {{ t.nombre }}</span>
+          <span class="temporada-ver-mas">Ver más</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>

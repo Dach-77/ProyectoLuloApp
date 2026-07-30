@@ -1,0 +1,101 @@
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/">LuloApp</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/catalogo">Catálogo</a>
+        </li>
+      </ul>
+      
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-light position-relative fw-bold px-3 py-2 rounded-pill" type="button" data-bs-toggle="offcanvas" data-bs-target="#carritoOffcanvas">
+          🛒 Carrito
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="carritoService.obtenerCarrito().length > 0">
+            {{ carritoService.obtenerCarrito().length }}
+          </span>
+        </button>
+
+        <div class="dropdown">
+          <button class="btn btn-light rounded-circle" type="button" id="usuarioDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Cuenta">
+            👤
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
+            <li *ngIf="!authService.estaAutenticado()"><a class="dropdown-item" routerLink="/login">🔐 Iniciar sesión</a></li>
+            <li><a class="dropdown-item" routerLink="/configuraciones">⚙️ Configuraciones</a></li>
+            <li *ngIf="authService.estaAutenticado()"><a class="dropdown-item" routerLink="/admin">🛠️ Perfil de administrador</a></li>
+            <li *ngIf="authService.estaAutenticado()"><button class="dropdown-item" type="button" (click)="cerrarSesion()">🚪 Cerrar sesión</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="carritoOffcanvas">
+  
+  <div class="offcanvas-header border-bottom">
+    <h5 class="offcanvas-title fw-bold">Tu Bolsa de Compras 🛍️</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  
+  <div class="offcanvas-body d-flex flex-column">
+    
+    <div class="flex-grow-1 overflow-auto">
+      <div *ngIf="carritoService.obtenerCarrito().length === 0" class="text-center text-muted mt-5">
+        <h1 class="display-1 mb-3">🛒</h1>
+        <p class="fs-5">Tu carrito está triste y vacío.</p>
+        <p>¡Anímate a agregar unos Lulos!</p>
+      </div>
+
+      <div class="card mb-3 border-0 shadow-sm bg-light" *ngFor="let item of carritoService.obtenerCarrito()">
+        <div class="row g-0 align-items-center">
+          
+          <div class="col-3 p-2">
+            <img [src]="item.producto.imagenUrl" class="img-fluid rounded shadow-sm" [alt]="item.producto.nombre">
+          </div>
+          
+          <div class="col-9">
+            <div class="card-body py-2 px-3">
+              
+              <div class="d-flex justify-content-between align-items-start">
+                <h6 class="card-title fw-bold mb-1 text-truncate pe-2" style="font-size: 0.9rem;">{{item.producto.nombre}}</h6>
+                <button class="btn btn-sm text-danger p-0 border-0" (click)="carritoService.eliminarDelCarrito(item.producto.id)" title="Eliminar prenda">
+                  <span class="fs-6">🗑️</span>
+                </button>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                
+                <div class="input-group input-group-sm shadow-sm" style="width: 85px;">
+                  <button class="btn btn-outline-dark bg-white" type="button" (click)="carritoService.restarCantidad(item.producto.id)">-</button>
+                  <span class="input-group-text bg-white px-2 fw-bold">{{item.cantidad}}</span>
+                  <button class="btn btn-outline-dark bg-white" type="button" (click)="carritoService.agregarAlCarrito(item.producto)">+</button>
+                </div>
+                
+                <span class="fw-bold text-success">{{ (item.producto.precio * item.cantidad) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-top pt-4 mt-3 pb-2">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="fs-5 text-muted">Total a pagar:</span>
+        <span class="fs-3 fw-bold text-success">{{ carritoService.obtenerTotal() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+      </div>
+      <button class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm" data-bs-dismiss="offcanvas" (click)="pagar()">
+        Proceder al Pago 💳
+      </button>
+    </div>
+
+  </div>
+</div>

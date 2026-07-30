@@ -1,0 +1,159 @@
+<div class="lulo-panel p-4 p-md-5">
+  <h2 class="fw-bold mb-4">
+    {{ idEnEdicion ? 'Editar Producto ✏️' : 'Crear Producto Nuevo 🆕' }}
+  </h2>
+
+  <form (ngSubmit)="onGuardar()">
+
+    <section class="form-section">
+      <h6 class="form-section-title">Información básica</h6>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Nombre</label>
+          <input type="text" class="form-control" name="nombre" [(ngModel)]="nuevoProducto.nombre" required>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Código Ref.</label>
+          <input type="text" class="form-control" name="codigo" [(ngModel)]="nuevoProducto.codigo" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold d-block">Género</label>
+          <div class="d-flex flex-wrap gap-2">
+            <ng-container *ngFor="let g of generoOpciones">
+              <input type="radio" class="btn-check" name="genero" [id]="'genero-' + g" autocomplete="off"
+                     [checked]="nuevoProducto.genero === g"
+                     (change)="nuevoProducto.genero = g">
+              <label class="btn btn-outline-dark btn-sm rounded-pill px-3" [for]="'genero-' + g">{{ g }}</label>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Precio (COP)</label>
+          <input type="number" class="form-control" name="precio" [(ngModel)]="nuevoProducto.precio" required>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h6 class="form-section-title">Detalles</h6>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold d-block">Materiales</label>
+          <div class="d-flex flex-wrap gap-2">
+            <ng-container *ngFor="let m of materialesOpciones">
+              <input type="checkbox" class="btn-check" [id]="'material-' + m" autocomplete="off"
+                     [checked]="nuevoProducto.materiales.includes(m)"
+                     (change)="toggleValor(nuevoProducto.materiales, m)">
+              <label class="btn btn-outline-success btn-sm rounded-pill px-3" [for]="'material-' + m">{{ m }}</label>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold d-block">Temporadas</label>
+          <div class="d-flex flex-wrap gap-2">
+            <ng-container *ngFor="let t of temporadasOpciones">
+              <input type="checkbox" class="btn-check" [id]="'temporada-' + t" autocomplete="off"
+                     [checked]="nuevoProducto.temporadas.includes(t)"
+                     (change)="toggleValor(nuevoProducto.temporadas, t)">
+              <label class="btn btn-outline-success btn-sm rounded-pill px-3" [for]="'temporada-' + t">{{ t }}</label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h6 class="form-section-title">Tallas y colores disponibles</h6>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold d-block">Tallas</label>
+          <div class="d-flex flex-wrap gap-2">
+            <ng-container *ngFor="let t of tallasOpciones">
+              <input type="checkbox" class="btn-check" [id]="'talla-' + t" autocomplete="off"
+                     [checked]="nuevoProducto.tallas.includes(t)"
+                     (change)="toggleValor(nuevoProducto.tallas, t)">
+              <label class="btn btn-outline-dark btn-sm rounded-pill px-3" [for]="'talla-' + t">{{ t }}</label>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold d-block">Colores</label>
+          <div class="d-flex flex-wrap gap-2">
+            <ng-container *ngFor="let c of coloresOpciones">
+              <input type="checkbox" class="btn-check" [id]="'color-' + c" autocomplete="off"
+                     [checked]="nuevoProducto.colores.includes(c)"
+                     (change)="toggleValor(nuevoProducto.colores, c)">
+              <label class="btn btn-outline-dark btn-sm rounded-pill px-3" [for]="'color-' + c">{{ c }}</label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h6 class="form-section-title">Inventario</h6>
+      <div class="row">
+        <div class="col-12 mb-3" *ngIf="nuevoProducto.tallas.length && nuevoProducto.colores.length">
+          <label class="form-label fw-bold">Stock por talla y color</label>
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered text-center align-middle mb-1">
+              <thead>
+                <tr>
+                  <th>Talla \ Color</th>
+                  <th *ngFor="let color of nuevoProducto.colores">{{ color }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let talla of nuevoProducto.tallas">
+                  <th>{{ talla }}</th>
+                  <td *ngFor="let color of nuevoProducto.colores">
+                    <div class="input-group input-group-sm stock-stepper mx-auto">
+                      <button type="button" class="btn btn-outline-dark" (click)="decrementarCantidad(talla, color)">−</button>
+                      <input type="number" min="0" class="form-control text-center"
+                             [value]="obtenerCantidad(talla, color)"
+                             (change)="actualizarCantidad(talla, color, $any($event.target).value)">
+                      <button type="button" class="btn btn-outline-dark" (click)="incrementarCantidad(talla, color)">+</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <small class="text-muted">Unidades disponibles para cada combinación de talla y color.</small>
+        </div>
+        <p class="col-12 text-muted small mb-0" *ngIf="!nuevoProducto.tallas.length || !nuevoProducto.colores.length">
+          Selecciona al menos una talla y un color para definir el stock disponible.
+        </p>
+      </div>
+    </section>
+
+    <section class="form-section form-section--last">
+      <h6 class="form-section-title">Imagen y descripción</h6>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label fw-bold">Adjuntar Foto</label>
+          <input type="file" class="form-control" (change)="seleccionarImagen($event)" accept="image/*" [required]="!idEnEdicion">
+          <small class="text-muted" *ngIf="idEnEdicion">Deja este campo vacío para conservar la foto actual.</small>
+        </div>
+
+        <div class="col-12 mb-3">
+          <label class="form-label fw-bold">Descripción</label>
+          <textarea class="form-control" name="descripcion" rows="2" [(ngModel)]="nuevoProducto.descripcion"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn btn-success rounded-pill flex-grow-1 fw-bold fs-5">
+        {{ idEnEdicion ? 'GUARDAR CAMBIOS' : 'REGISTRAR PRODUCTO EN INVENTARIO' }}
+      </button>
+      <button type="button" class="btn btn-outline-dark rounded-pill fw-bold" *ngIf="idEnEdicion" (click)="onCancelar()">
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-outline-danger rounded-pill fw-bold" *ngIf="idEnEdicion" (click)="onEliminar()">
+        🗑️ Eliminar
+      </button>
+    </div>
+  </form>
+</div>

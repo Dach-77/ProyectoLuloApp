@@ -1,1 +1,96 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Paleta orgánica: verde oliva + arena */
+  --lulo-olive: #5C6B3D;
+  --lulo-olive-rgb: 92, 107, 61;
+  --lulo-olive-dark: #384226;
+  --lulo-olive-dark-rgb: 56, 66, 38;
+  --lulo-gold: #B08D3E;
+  --lulo-gold-rgb: 176, 141, 62;
+  --lulo-sand: #EDE4D3;
+  --lulo-ink: #33362B;
+  --lulo-ink-rgb: 51, 54, 43;
+  --lulo-muted-rgb: 112, 116, 100;
+
+  /* Reasignamos las variables de Bootstrap a la paleta orgánica */
+  --bs-success: var(--lulo-olive);
+  --bs-success-rgb: var(--lulo-olive-rgb);
+  --bs-dark: var(--lulo-olive-dark);
+  --bs-dark-rgb: var(--lulo-olive-dark-rgb);
+  --bs-warning: var(--lulo-gold);
+  --bs-warning-rgb: var(--lulo-gold-rgb);
+  --bs-secondary-rgb: var(--lulo-muted-rgb);
+  --bs-body-color: var(--lulo-ink);
+  --bs-body-color-rgb: var(--lulo-ink-rgb);
+  --bs-body-bg: var(--lulo-sand);
+  --bs-border-color: #E2D9C5;
+  --bs-link-color: var(--lulo-olive);
+  --bs-link-color-rgb: var(--lulo-olive-rgb);
+  --bs-link-hover-color: var(--lulo-olive-dark);
+}
+
+/* Escala base más pequeña: menos ruido visual en toda la app */
+html {
+  font-size: 87.5%;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--lulo-sand);
+}
+
+/* Jerarquía tipográfica más contenida (Bootstrap trae tamaños muy grandes por defecto) */
+h1, .h1 { font-size: 2rem; }
+h2, .h2 { font-size: 1.6rem; }
+h3, .h3 { font-size: 1.35rem; }
+h4, .h4 { font-size: 1.15rem; }
+h5, .h5 { font-size: 1rem; }
+h6, .h6 { font-size: .875rem; }
+
+.fw-bold { font-weight: 600 !important; }
+
+.fs-1 { font-size: 2rem !important; }
+.fs-2 { font-size: 1.75rem !important; }
+.fs-3 { font-size: 1.4rem !important; }
+.fs-4 { font-size: 1.2rem !important; }
+.fs-5 { font-size: 1.05rem !important; }
+.fs-6 { font-size: .9rem !important; }
+
+/* Bootstrap fija el color de .btn-success / .btn-dark / .btn-outline-dark en hex,
+   no usan las variables de arriba, así que se redefinen aquí */
+.btn-success {
+  --bs-btn-bg: var(--lulo-olive);
+  --bs-btn-border-color: var(--lulo-olive);
+  --bs-btn-hover-bg: var(--lulo-olive-dark);
+  --bs-btn-hover-border-color: var(--lulo-olive-dark);
+  --bs-btn-active-bg: var(--lulo-olive-dark);
+  --bs-btn-active-border-color: var(--lulo-olive-dark);
+}
+
+.btn-dark {
+  --bs-btn-bg: var(--lulo-olive-dark);
+  --bs-btn-border-color: var(--lulo-olive-dark);
+  --bs-btn-hover-bg: #2a3119;
+  --bs-btn-hover-border-color: #2a3119;
+  --bs-btn-active-bg: #2a3119;
+  --bs-btn-active-border-color: #2a3119;
+}
+
+.btn-outline-dark {
+  --bs-btn-color: var(--lulo-olive-dark);
+  --bs-btn-border-color: var(--lulo-olive-dark);
+  --bs-btn-hover-bg: var(--lulo-olive-dark);
+  --bs-btn-hover-border-color: var(--lulo-olive-dark);
+  --bs-btn-active-bg: var(--lulo-olive-dark);
+  --bs-btn-active-border-color: var(--lulo-olive-dark);
+}
+
+/* "Módulo" reutilizable: se usa para las tarjetas que flotan sobre el fondo arena
+   (p. ej. panel de administrador) — blanco, esquinas más redondeadas que el .card
+   de Bootstrap, y una sombra sutil en vez de la sombra pesada por defecto. */
+.lulo-panel {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -20px rgba(var(--lulo-olive-dark-rgb), 0.45), 0 2px 8px rgba(var(--lulo-olive-dark-rgb), 0.06);
+}

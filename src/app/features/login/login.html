@@ -1,0 +1,39 @@
+<div class="container mt-5 mb-5" style="max-width: 420px;">
+  <div class="card p-4 shadow border-0">
+    <h2 class="text-success fw-bold mb-4 text-center">Iniciar Sesión 🔐</h2>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label" for="usuario">Usuario</label>
+        <input
+          type="text"
+          class="form-control"
+          id="usuario"
+          name="usuario"
+          [(ngModel)]="usuario"
+          required
+          autocomplete="username"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="contrasena">Contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          id="contrasena"
+          name="contrasena"
+          [(ngModel)]="contrasena"
+          required
+          autocomplete="current-password"
+        />
+      </div>
+
+      <p class="text-danger text-center" *ngIf="mensajeError()">{{ mensajeError() }}</p>
+
+      <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold" [disabled]="cargando()">
+        {{ cargando() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+</div>
