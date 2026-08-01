@@ -22,6 +22,106 @@ namespace LuloApp.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("LuloApp.Api.Models.Cliente", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("FechaRegistro")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Clientes", (string)null);
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.Pedido", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClienteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("Pedidos", (string)null);
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.PedidoItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("NombreProducto")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("PrecioUnitario")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid?>("ProductoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Talla")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("PedidoItems", (string)null);
+                });
+
             modelBuilder.Entity("LuloApp.Api.Models.Producto", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,6 +167,9 @@ namespace LuloApp.Api.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Codigo")
+                        .IsUnique();
 
                     b.ToTable("Productos", (string)null);
 
@@ -119,6 +222,33 @@ namespace LuloApp.Api.Migrations
                             Nombre = "Camisa Nube",
                             Precio = 120000m
                         });
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.ProductoImagenColor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImagenUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ProductoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductoId", "Color")
+                        .IsUnique();
+
+                    b.ToTable("ProductoImagenesColor", (string)null);
                 });
 
             modelBuilder.Entity("LuloApp.Api.Models.ProductoMaterial", b =>
@@ -251,6 +381,38 @@ namespace LuloApp.Api.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LuloApp.Api.Models.Pedido", b =>
+                {
+                    b.HasOne("LuloApp.Api.Models.Cliente", null)
+                        .WithMany("Pedidos")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.PedidoItem", b =>
+                {
+                    b.HasOne("LuloApp.Api.Models.Pedido", null)
+                        .WithMany("Items")
+                        .HasForeignKey("PedidoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LuloApp.Api.Models.Producto", null)
+                        .WithMany("PedidoItems")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.ProductoImagenColor", b =>
+                {
+                    b.HasOne("LuloApp.Api.Models.Producto", null)
+                        .WithMany("ImagenesPorColor")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("LuloApp.Api.Models.ProductoMaterial", b =>
                 {
                     b.HasOne("LuloApp.Api.Models.Producto", null)
@@ -278,9 +440,23 @@ namespace LuloApp.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("LuloApp.Api.Models.Cliente", b =>
+                {
+                    b.Navigation("Pedidos");
+                });
+
+            modelBuilder.Entity("LuloApp.Api.Models.Pedido", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("LuloApp.Api.Models.Producto", b =>
                 {
+                    b.Navigation("ImagenesPorColor");
+
                     b.Navigation("Materiales");
+
+                    b.Navigation("PedidoItems");
 
                     b.Navigation("Stock");
 

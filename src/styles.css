@@ -1,33 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Paleta orgánica: verde oliva + arena */
-  --lulo-olive: #5C6B3D;
-  --lulo-olive-rgb: 92, 107, 61;
-  --lulo-olive-dark: #384226;
-  --lulo-olive-dark-rgb: 56, 66, 38;
-  --lulo-gold: #B08D3E;
-  --lulo-gold-rgb: 176, 141, 62;
-  --lulo-sand: #EDE4D3;
-  --lulo-ink: #33362B;
-  --lulo-ink-rgb: 51, 54, 43;
-  --lulo-muted-rgb: 112, 116, 100;
+  /* Paleta: crema + sage + negro */
+  --lulo-bg: #F8F5EF;
+  --lulo-bg-rgb: 248, 245, 239;
+  --lulo-card-bg: #FFFDF8;
+  --lulo-accent: #A8B49C;
+  --lulo-accent-rgb: 168, 180, 156;
+  /* El sage es demasiado claro para usarse como texto (falla contraste sobre fondos
+     claros): en botones/rellenos siempre va con texto negro encima. Este tono solo se
+     usa para dar feedback visual de hover/activo sobre el propio relleno sage. */
+  --lulo-accent-hover: color-mix(in srgb, var(--lulo-accent) 82%, black);
+  --lulo-ink: #000000;
+  --lulo-ink-rgb: 0, 0, 0;
+  --lulo-muted-rgb: 110, 110, 110;
 
-  /* Reasignamos las variables de Bootstrap a la paleta orgánica */
-  --bs-success: var(--lulo-olive);
-  --bs-success-rgb: var(--lulo-olive-rgb);
-  --bs-dark: var(--lulo-olive-dark);
-  --bs-dark-rgb: var(--lulo-olive-dark-rgb);
-  --bs-warning: var(--lulo-gold);
-  --bs-warning-rgb: var(--lulo-gold-rgb);
+  /* Reasignamos las variables de Bootstrap a la paleta */
+  --bs-success: var(--lulo-accent);
+  --bs-success-rgb: var(--lulo-accent-rgb);
+  --bs-dark: var(--lulo-ink);
+  --bs-dark-rgb: var(--lulo-ink-rgb);
+  --bs-light: var(--lulo-card-bg);
+  --bs-light-rgb: 255, 253, 248;
   --bs-secondary-rgb: var(--lulo-muted-rgb);
   --bs-body-color: var(--lulo-ink);
   --bs-body-color-rgb: var(--lulo-ink-rgb);
-  --bs-body-bg: var(--lulo-sand);
-  --bs-border-color: #E2D9C5;
-  --bs-link-color: var(--lulo-olive);
-  --bs-link-color-rgb: var(--lulo-olive-rgb);
-  --bs-link-hover-color: var(--lulo-olive-dark);
+  --bs-body-bg: var(--lulo-bg);
+  --bs-border-color: rgba(0, 0, 0, 0.12);
+  --bs-link-color: var(--lulo-ink);
+  --bs-link-color-rgb: var(--lulo-ink-rgb);
+  --bs-link-hover-color: var(--lulo-accent-hover);
+
+  /* Módulos (card/modal/dropdown/offcanvas) en blanco cálido, distinto del fondo crema */
+  --bs-card-bg: var(--lulo-card-bg);
+  --bs-modal-bg: var(--lulo-card-bg);
+  --bs-dropdown-bg: var(--lulo-card-bg);
+  --bs-offcanvas-bg: var(--lulo-card-bg);
 }
 
 /* Escala base más pequeña: menos ruido visual en toda la app */
@@ -36,8 +44,16 @@ html {
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--lulo-sand);
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--lulo-bg);
+}
+
+/* Títulos en serif (Palatino Linotype es una fuente del sistema, no de Google Fonts:
+   no se puede @import, se declara directo con fallbacks serif) */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.navbar-brand {
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
 
 /* Jerarquía tipográfica más contenida (Bootstrap trae tamaños muy grandes por defecto) */
@@ -57,40 +73,116 @@ h6, .h6 { font-size: .875rem; }
 .fs-5 { font-size: 1.05rem !important; }
 .fs-6 { font-size: .9rem !important; }
 
-/* Bootstrap fija el color de .btn-success / .btn-dark / .btn-outline-dark en hex,
-   no usan las variables de arriba, así que se redefinen aquí */
+/* Bootstrap hereda --bs-body-bg (crema) como fondo de .form-control/.form-select
+   por defecto: sin esto, todos los inputs de la app se ven del mismo tono que el
+   fondo de la página en vez de blancos. */
+.form-control,
+.form-select {
+  background-color: var(--lulo-card-bg);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--lulo-card-bg);
+  border-color: var(--lulo-accent);
+  box-shadow: 0 0 0 0.2rem rgba(var(--lulo-accent-rgb), 0.25);
+}
+
+/* Bootstrap fija el color de .btn-success / .btn-outline-success / .btn-dark /
+   .btn-outline-dark en hex, no usan las variables de arriba, así que se redefinen
+   aquí. El texto siempre queda en negro sobre el relleno sage (el sage no pasa
+   contraste como texto), y en negro los rellenos usan crema en vez de blanco puro. */
 .btn-success {
-  --bs-btn-bg: var(--lulo-olive);
-  --bs-btn-border-color: var(--lulo-olive);
-  --bs-btn-hover-bg: var(--lulo-olive-dark);
-  --bs-btn-hover-border-color: var(--lulo-olive-dark);
-  --bs-btn-active-bg: var(--lulo-olive-dark);
-  --bs-btn-active-border-color: var(--lulo-olive-dark);
+  --bs-btn-color: var(--lulo-ink);
+  --bs-btn-bg: var(--lulo-accent);
+  --bs-btn-border-color: var(--lulo-accent);
+  --bs-btn-hover-color: var(--lulo-ink);
+  --bs-btn-hover-bg: var(--lulo-accent-hover);
+  --bs-btn-hover-border-color: var(--lulo-accent-hover);
+  --bs-btn-active-color: var(--lulo-ink);
+  --bs-btn-active-bg: var(--lulo-accent-hover);
+  --bs-btn-active-border-color: var(--lulo-accent-hover);
+}
+
+.btn-outline-success {
+  --bs-btn-color: var(--lulo-ink);
+  --bs-btn-border-color: var(--lulo-accent);
+  --bs-btn-hover-color: var(--lulo-ink);
+  --bs-btn-hover-bg: var(--lulo-accent);
+  --bs-btn-hover-border-color: var(--lulo-accent);
+  --bs-btn-active-color: var(--lulo-ink);
+  --bs-btn-active-bg: var(--lulo-accent);
+  --bs-btn-active-border-color: var(--lulo-accent);
 }
 
 .btn-dark {
-  --bs-btn-bg: var(--lulo-olive-dark);
-  --bs-btn-border-color: var(--lulo-olive-dark);
-  --bs-btn-hover-bg: #2a3119;
-  --bs-btn-hover-border-color: #2a3119;
-  --bs-btn-active-bg: #2a3119;
-  --bs-btn-active-border-color: #2a3119;
+  --bs-btn-color: var(--lulo-bg);
+  --bs-btn-bg: var(--lulo-ink);
+  --bs-btn-border-color: var(--lulo-ink);
+  --bs-btn-hover-color: var(--lulo-bg);
+  --bs-btn-hover-bg: #1a1a1a;
+  --bs-btn-hover-border-color: #1a1a1a;
+  --bs-btn-active-color: var(--lulo-bg);
+  --bs-btn-active-bg: #1a1a1a;
+  --bs-btn-active-border-color: #1a1a1a;
 }
 
 .btn-outline-dark {
-  --bs-btn-color: var(--lulo-olive-dark);
-  --bs-btn-border-color: var(--lulo-olive-dark);
-  --bs-btn-hover-bg: var(--lulo-olive-dark);
-  --bs-btn-hover-border-color: var(--lulo-olive-dark);
-  --bs-btn-active-bg: var(--lulo-olive-dark);
-  --bs-btn-active-border-color: var(--lulo-olive-dark);
+  --bs-btn-color: var(--lulo-ink);
+  --bs-btn-border-color: var(--lulo-ink);
+  --bs-btn-hover-color: var(--lulo-bg);
+  --bs-btn-hover-bg: var(--lulo-ink);
+  --bs-btn-hover-border-color: var(--lulo-ink);
+  --bs-btn-active-color: var(--lulo-bg);
+  --bs-btn-active-bg: var(--lulo-ink);
+  --bs-btn-active-border-color: var(--lulo-ink);
 }
 
-/* "Módulo" reutilizable: se usa para las tarjetas que flotan sobre el fondo arena
-   (p. ej. panel de administrador) — blanco, esquinas más redondeadas que el .card
-   de Bootstrap, y una sombra sutil en vez de la sombra pesada por defecto. */
+/* "Módulo" reutilizable: se usa para las tarjetas que flotan sobre el fondo crema
+   (p. ej. panel de administrador) — blanco cálido, esquinas más redondeadas que el
+   .card de Bootstrap, y una sombra sutil en vez de la sombra pesada por defecto. */
 .lulo-panel {
-  background: #fff;
+  background: var(--lulo-card-bg);
   border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -20px rgba(var(--lulo-olive-dark-rgb), 0.45), 0 2px 8px rgba(var(--lulo-olive-dark-rgb), 0.06);
+  box-shadow: 0 10px 30px -20px rgba(var(--lulo-ink-rgb), 0.35), 0 2px 8px rgba(var(--lulo-ink-rgb), 0.06);
+}
+
+/* Selector tipo "segmented control" en vez de las pestañas subrayadas por defecto de
+   Bootstrap: lo usan el panel de admin y el popup de bienvenida de clientes. */
+.lulo-tabs {
+  display: inline-flex;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.65);
+  border: 0;
+  border-radius: 999px;
+  padding: 0.3rem;
+  box-shadow: 0 2px 8px rgba(var(--lulo-ink-rgb), 0.06);
+}
+
+.lulo-tabs .nav-item {
+  margin-bottom: 0;
+}
+
+.lulo-tabs .nav-link {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.5rem 1.15rem;
+  font-weight: 600;
+  color: var(--lulo-ink);
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lulo-tabs .nav-link:hover {
+  border: 0;
+  color: var(--lulo-ink);
+  background: rgba(var(--lulo-accent-rgb), 0.18);
+}
+
+.lulo-tabs .nav-link.active {
+  /* El sage no pasa contraste como texto blanco: el texto de la pestaña activa
+     queda en negro sobre el relleno sage. */
+  color: var(--lulo-ink);
+  background: var(--lulo-accent);
+  box-shadow: 0 4px 10px rgba(var(--lulo-accent-rgb), 0.45);
 }

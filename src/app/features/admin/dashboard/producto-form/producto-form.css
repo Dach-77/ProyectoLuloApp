@@ -1,6 +1,6 @@
 .form-section {
-  background: rgba(var(--lulo-olive-rgb), 0.035);
-  border: 1px solid rgba(var(--lulo-olive-rgb), 0.09);
+  background: rgba(var(--lulo-accent-rgb), 0.06);
+  border: 1px solid rgba(var(--lulo-accent-rgb), 0.22);
   border-radius: 0.9rem;
   padding: 1.25rem 1.25rem 0.75rem;
   margin-bottom: 1.25rem;
@@ -13,7 +13,7 @@
 .form-section-title {
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--lulo-olive-dark);
+  color: var(--lulo-ink);
   font-weight: 700;
   font-size: 0.8rem;
   margin-bottom: 1rem;
@@ -33,19 +33,13 @@
   padding-right: 0.25rem;
 }
 
+/* El fondo/focus de .form-control ya son globales (styles.css); acá solo el
+   borde en reposo, que en este formulario es más marcado que el default. */
 .form-control,
 .form-select {
-  background-color: #fff;
-  border-color: rgba(var(--lulo-olive-dark-rgb), 0.18);
-}
-
-.form-control:focus,
-.form-select:focus {
-  background-color: #fff;
-  border-color: var(--lulo-olive);
-  box-shadow: 0 0 0 0.2rem rgba(var(--lulo-olive-rgb), 0.15);
+  border-color: rgba(var(--lulo-ink-rgb), 0.18);
 }
 
 .stock-stepper .form-control {
-  border-color: rgba(var(--lulo-olive-dark-rgb), 0.18);
+  border-color: rgba(var(--lulo-ink-rgb), 0.18);
 }

@@ -23,6 +23,12 @@ export class ProductoCard {
 
   private readonly carritoService = inject(CarritoService);
 
+  // Si el color elegido tiene una foto propia, se muestra esa en vez de la general
+  get imagenMostrada(): string {
+    const imagenColor = this.producto.imagenesPorColor?.find(i => i.color === this.colorSeleccionado);
+    return imagenColor?.imagenUrl ?? this.producto.imagenUrl;
+  }
+
   seleccionarTalla(event: Event) {
     this.tallaSeleccionada = (event.target as HTMLSelectElement).value;
   }
@@ -46,6 +52,9 @@ export class ProductoCard {
       return;
     }
 
-    this.carritoService.agregarVarianteAlCarrito(this.producto, this.tallaSeleccionada, this.colorSeleccionado);
+    const agregado = this.carritoService.agregarVarianteAlCarrito(this.producto, this.tallaSeleccionada, this.colorSeleccionado);
+    if (!agregado) {
+      alert(`No quedan más unidades disponibles de ${this.producto.nombre} en talla ${this.tallaSeleccionada} y color ${this.colorSeleccionado}.`);
+    }
   }
 }

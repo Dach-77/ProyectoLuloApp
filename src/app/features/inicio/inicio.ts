@@ -51,6 +51,15 @@ export class Inicio {
     });
   });
 
+  // No existe todavía un campo "favorito"/best-seller en el modelo: mientras tanto,
+  // se muestran los productos activos de mayor precio como placeholder.
+  readonly favoritosCards = computed(() => {
+    return [...this.productos()]
+      .filter(p => p.activo && p.imagenUrl)
+      .sort((a, b) => b.precio - a.precio)
+      .slice(0, 4);
+  });
+
   private agruparDeACuatro(productos: Producto[]): Producto[][] {
     const grupos: Producto[][] = [];
     for (let i = 0; i < productos.length; i += 4) {

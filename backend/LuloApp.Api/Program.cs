@@ -78,15 +78,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();
 
-// Protege la única credencial de admin contra intentos de fuerza bruta.
+// Protege el login de admin y el login/registro de clientes contra fuerza bruta.
+// Partición por IP (no el overload AddFixedWindowLimiter a secas): ese overload usa una
+// única ventana GLOBAL compartida por todos los clientes, así que un solo atacante (o
+// incluso un solo cliente con reintentos) agotaba el cupo de TODOS los usuarios del sitio
+// que intentaran loguearse o registrarse al mismo tiempo.
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("login", limiterOptions =>
-    {
-        limiterOptions.PermitLimit = 5;
-        limiterOptions.Window = TimeSpan.FromMinutes(1);
-        limiterOptions.QueueLimit = 0;
-    });
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("login", context => RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "sin-ip",
+        factory: _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(1),
+            QueueLimit = 0
+        }));
 });
 
 const string ConfiguredCors = "ConfiguredCors";

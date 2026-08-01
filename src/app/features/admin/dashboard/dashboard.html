@@ -16,6 +16,11 @@
         📦 Inventario
       </button>
     </li>
+    <li class="nav-item">
+      <button id="tab-btn-pedidos" class="nav-link" type="button" data-bs-toggle="tab" data-bs-target="#tab-pedidos">
+        🧾 Pedidos
+      </button>
+    </li>
   </ul>
 
   <div class="tab-content">
@@ -35,6 +40,10 @@
         (editar)="editarProducto($event)"
         (cambiarEstado)="cambiarEstado($event)">
       </app-inventario-tabla>
+    </div>
+
+    <div class="tab-pane fade" id="tab-pedidos">
+      <app-pedidos-tabla [pedidos]="(pedidos$ | async) ?? []"></app-pedidos-tabla>
     </div>
 
   </div>

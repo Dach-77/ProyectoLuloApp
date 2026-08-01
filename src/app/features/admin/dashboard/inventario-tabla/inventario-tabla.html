@@ -36,9 +36,9 @@
           </td>
           <td>
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch"
+              <input class="form-check-input" type="checkbox" role="switch" [id]="'estado-' + producto.id"
                      [checked]="producto.activo" (change)="cambiarEstado.emit(producto)">
-              <label class="form-check-label small">{{ producto.activo ? 'Activo' : 'Inactivo' }}</label>
+              <label class="form-check-label small" [for]="'estado-' + producto.id">{{ producto.activo ? 'Activo' : 'Inactivo' }}</label>
             </div>
           </td>
           <td class="text-end">

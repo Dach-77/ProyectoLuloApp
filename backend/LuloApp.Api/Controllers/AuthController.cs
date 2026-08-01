@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
             return Unauthorized(new { error = "Usuario o contraseña incorrectos." });
         }
 
-        var (token, expiresAtUtc) = _jwtTokenService.GenerateToken(usuarioConfigurado!);
+        var (token, expiresAtUtc) = _jwtTokenService.GenerateToken(usuarioConfigurado!, "Admin");
         return Ok(new LoginResponse { Token = token, ExpiresAtUtc = expiresAtUtc });
     }
 }

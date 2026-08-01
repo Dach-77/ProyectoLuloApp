@@ -3,10 +3,10 @@
     border: none; /* Quitamos los bordes duros de Bootstrap */
     border-radius: 12px; /* Esquinas más suaves */
     overflow: hidden;
-    /* --card-bg la puede sobreescribir un componente padre (ej. Catálogo, tono hueso) */
-    background-color: var(--card-bg, #fff);
+    /* --card-bg la puede sobreescribir un componente padre (ej. Catálogo) */
+    background-color: var(--card-bg, var(--lulo-card-bg));
     /* MÁS AIRE interno */
-    padding: 1.5rem; /* Aumentamos el padding para sofisticación */
+    padding: 1.75rem; /* Aumentamos el padding para sofisticación */
 
     /* Efecto base de profundidad */
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -29,15 +29,15 @@
 
 /* 3. Textos */
 .product-category {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    color: #8a8a72; /* Gris cálido, en línea con la paleta orgánica */
+    color: rgba(var(--lulo-ink-rgb), 0.55); /* Gris derivado del negro de la paleta */
     letter-spacing: 0.05em; /* Un poco de espaciado entre letras */
 }
 
 .product-title {
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     color: var(--lulo-ink);
     margin-bottom: 0.35rem;
 }
@@ -48,17 +48,17 @@
 
 .product-select-label {
     display: block;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #8a8a72;
+    color: rgba(var(--lulo-ink-rgb), 0.55);
     margin-bottom: 0.2rem;
 }
 
 .product-price {
     font-weight: 600;
-    color: var(--lulo-olive-dark);
-    font-size: 1.05rem;
+    color: var(--lulo-ink);
+    font-size: 1.2rem;
     margin-bottom: 1.25rem;
 }
 
@@ -66,16 +66,16 @@
 .btn-add-to-cart {
     border-radius: 25px; /* Estilo 'píldora' total */
     width: 100%; /* Ocupa más espacio, mejor UX */
-    background-color: var(--lulo-olive);
+    background-color: var(--lulo-accent);
     border: none;
-    color: #fff;
+    color: var(--lulo-ink); /* El sage no pasa contraste con texto blanco */
     font-weight: 600;
-    font-size: 0.9rem;
-    padding: 0.65rem 1.5rem; /* Más alto, mejor touch-target */
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem; /* Más alto, mejor touch-target */
     transition: background-color 0.2s;
 }
 
 /* Micro-interacción hover en el botón */
 .btn-add-to-cart:hover {
-    background-color: var(--lulo-olive-dark);
+    background-color: var(--lulo-accent-hover);
 }

@@ -1,6 +1,6 @@
-/* Tono hueso para las cajas del catálogo (el fondo general de la app sigue en arena) */
+/* Mismo blanco cálido que el resto de "módulos" de la app (el fondo general sigue en crema) */
 :host {
-  --card-bg: #F8F3E7;
+  --card-bg: var(--lulo-card-bg);
 }
 
 .filtros-card {

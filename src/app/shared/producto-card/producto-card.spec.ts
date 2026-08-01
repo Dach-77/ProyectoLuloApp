@@ -19,7 +19,8 @@ describe('ProductoCard', () => {
     stock: [],
     precio: 1000,
     imagenUrl: '',
-    descripcion: ''
+    descripcion: '',
+    imagenesPorColor: []
   };
 
   beforeEach(async () => {

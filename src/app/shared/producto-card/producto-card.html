@@ -4,7 +4,7 @@
        (click)="onClickImagen()"
        [attr.data-bs-toggle]="habilitarVistaRapida ? 'modal' : null"
        [attr.data-bs-target]="habilitarVistaRapida ? '#productoModal' : null">
-    <img [src]="producto.imagenUrl" class="card-img-top" [alt]="producto.nombre">
+    <img [src]="imagenMostrada" class="card-img-top" [alt]="producto.nombre">
   </div>
 
   <div class="card-body d-flex flex-column px-0 pb-0">

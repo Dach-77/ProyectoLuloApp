@@ -20,8 +20,8 @@
        id="carruselRecientes" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item" *ngFor="let grupo of gruposCarrusel(); let i = index" [class.active]="i === 0">
-        <div class="row g-4 px-1 px-md-5">
-          <div class="col-6 col-md-3" *ngFor="let producto of grupo">
+        <div class="row g-4 row-cols-2 row-cols-md-4">
+          <div class="col" *ngFor="let producto of grupo">
             <app-producto-card [producto]="producto" [habilitarVistaRapida]="false"></app-producto-card>
           </div>
         </div>
@@ -31,9 +31,11 @@
     <ng-container *ngIf="gruposCarrusel().length > 1">
       <button class="carousel-control-prev" type="button" data-bs-target="#carruselRecientes" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
       </button>
       <button class="carousel-control-next" type="button" data-bs-target="#carruselRecientes" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
       </button>
     </ng-container>
   </div>
@@ -46,21 +48,61 @@
 <!-- Módulo 3: Temporadas -->
 <section class="container my-5 mb-5">
   <h2 class="fw-bold mb-4 text-center">Compra por Temporada</h2>
-  <div class="row g-2 g-md-3">
-    <div class="col-6 col-md" *ngFor="let t of temporadaCards()">
-      <a [routerLink]="['/catalogo']" [queryParams]="{ temporada: t.nombre }" class="temporada-tile d-block text-decoration-none">
-        <div class="temporada-imagen-wrapper">
+  <div class="row g-3 g-md-4 row-cols-2 row-cols-md-4">
+    <div class="col" *ngFor="let t of temporadaCards()">
+      <a [routerLink]="['/catalogo']" [queryParams]="{ temporada: t.nombre }" class="tile d-block text-decoration-none">
+        <div class="tile-imagen-wrapper">
           <img *ngIf="t.imagenUrl as url; else sinImagenTemporada"
-               [src]="url" [alt]="t.nombre" class="temporada-imagen">
+               [src]="url" [alt]="t.nombre" class="tile-imagen">
           <ng-template #sinImagenTemporada>
-            <div class="temporada-imagen temporada-imagen--vacia d-flex align-items-center justify-content-center">
+            <div class="tile-imagen temporada-imagen--vacia d-flex align-items-center justify-content-center">
               <span class="temporada-icono">{{ t.icono }}</span>
             </div>
           </ng-template>
         </div>
-        <div class="temporada-caption">
+        <div class="tile-caption">
           <span class="temporada-nombre">Colección {{ t.nombre }}</span>
           <span class="temporada-ver-mas">Ver más</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Módulo 4: Nuestra historia (storytelling) -->
+<section class="story-banner">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <span class="story-eyebrow">Nuestra historia</span>
+        <h2 class="fw-bold story-titulo mt-2 mb-4">Una marca que recién empieza a tejerse</h2>
+        <p class="story-texto mb-0">
+          LuloApp nació de una idea simple: vestir cada etapa de la infancia con prendas hechas
+          para durar, con materiales nobles y un diseño pensado en el día a día de cada familia.
+          Hoy seguimos construyendo esta marca paso a paso, y cada producto que ves en el catálogo
+          es parte de ese proceso. Gracias por acompañarnos desde el principio: lo mejor todavía
+          está por tejerse.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Módulo 5: Nuestros favoritos -->
+<section class="container my-5 mb-5" *ngIf="favoritosCards().length">
+  <div class="favoritos-header mb-4">
+    <span class="favoritos-eyebrow">Nuestros favoritos</span>
+    <p class="favoritos-subtitulo mb-0">Las piezas favoritas de nuestra comunidad</p>
+  </div>
+  <div class="row g-3 g-md-4 row-cols-2 row-cols-md-4">
+    <div class="col" *ngFor="let p of favoritosCards()">
+      <a [routerLink]="['/catalogo']" class="tile d-block text-decoration-none">
+        <div class="tile-imagen-wrapper">
+          <img [src]="p.imagenUrl" [alt]="p.nombre" class="tile-imagen">
+        </div>
+        <div class="tile-caption">
+          <span class="favorito-nombre">{{ p.nombre }}</span>
+          <span class="favorito-precio">{{ p.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
         </div>
       </a>
     </div>

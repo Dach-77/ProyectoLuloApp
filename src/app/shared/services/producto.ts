@@ -32,15 +32,17 @@ export class ProductoService {
       .pipe(map(resultado => resultado.items));
   }
 
-  // Guarda una prenda nueva junto con su foto
-  async guardarProductoConImagen(producto: Producto, imagen: File) {
-    const formData = this.construirFormData(producto, imagen);
+  // Guarda una prenda nueva junto con al menos una foto de color (la primera subida
+  // se usa como portada del producto — no hay un campo de "foto principal" separado)
+  async guardarProductoConImagen(producto: Producto, imagenesPorColor: Record<string, File>) {
+    const formData = this.construirFormData(producto, imagenesPorColor);
     return await firstValueFrom(this.http.post<Producto>(this.apiUrl, formData));
   }
 
-  // Edita una prenda ya existente. Si no se adjunta foto nueva, la API conserva la actual.
-  async actualizarProducto(id: string, cambios: Producto, imagen?: File | null) {
-    const formData = this.construirFormData(cambios, imagen ?? undefined);
+  // Edita una prenda ya existente. Si no se adjunta foto nueva para algún color, la
+  // API conserva la que ya tenía para ese color (y la portada actual, si ninguna cambió).
+  async actualizarProducto(id: string, cambios: Producto, imagenesPorColor?: Record<string, File>) {
+    const formData = this.construirFormData(cambios, imagenesPorColor);
     return await firstValueFrom(this.http.put<Producto>(`${this.apiUrl}/${id}`, formData));
   }
 
@@ -54,7 +56,7 @@ export class ProductoService {
     return await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
   }
 
-  private construirFormData(producto: Producto, imagen?: File): FormData {
+  private construirFormData(producto: Producto, imagenesPorColor?: Record<string, File>): FormData {
     const formData = new FormData();
     formData.append('nombre', producto.nombre);
     formData.append('codigo', producto.codigo);
@@ -64,8 +66,10 @@ export class ProductoService {
     formData.append('stockJson', JSON.stringify(producto.stock ?? []));
     formData.append('precio', producto.precio.toString());
     formData.append('descripcion', producto.descripcion ?? '');
-    if (imagen) {
-      formData.append('foto', imagen);
+    // El backend identifica estos campos de foto por color por el nombre del campo del
+    // multipart (ver ExtraerFotosPorColor en ProductosController).
+    for (const [color, archivo] of Object.entries(imagenesPorColor ?? {})) {
+      formData.append(`fotoColor:${color}`, archivo);
     }
     return formData;
   }

@@ -26,4 +26,11 @@ public class Producto
 
     // Unidades disponibles por cada combinación de talla + color
     public List<ProductoStock> Stock { get; set; } = new();
+
+    // Foto propia por color (opcional): si un color no está acá, el catálogo usa ImagenUrl
+    public List<ProductoImagenColor> ImagenesPorColor { get; set; } = new();
+
+    // Líneas de pedido que compraron esta prenda. Cada PedidoItem guarda su propio
+    // snapshot de nombre/precio, así que esta colección es solo de conveniencia.
+    public List<PedidoItem> PedidoItems { get; set; } = new();
 }

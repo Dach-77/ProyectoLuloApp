@@ -68,8 +68,8 @@
 
   <p class="text-muted small mb-3">{{ productosFiltrados().length }} producto(s) encontrado(s)</p>
 
-  <div class="row g-4" *ngIf="productosFiltrados().length; else sinResultados">
-    <div class="col-md-4 col-lg-3" *ngFor="let producto of productosFiltrados()">
+  <div class="row g-4 row-cols-2 row-cols-md-4" *ngIf="productosFiltrados().length; else sinResultados">
+    <div class="col" *ngFor="let producto of productosFiltrados()">
       <app-producto-card
         [producto]="producto"
         [habilitarVistaRapida]="true"
@@ -93,14 +93,14 @@
 
       <div class="row g-0">
         <div class="col-md-6">
-          <img [src]="productoSeleccionado.imagenUrl" class="img-fluid rounded-start-4 h-100 object-fit-cover" [alt]="productoSeleccionado.nombre">
+          <img [src]="imagenModal" class="img-fluid rounded-start-4 h-100 object-fit-cover" [alt]="productoSeleccionado.nombre">
         </div>
         <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center">
           <span class="badge bg-light text-dark border mb-2">{{productoSeleccionado.materiales.join(', ')}} · {{productoSeleccionado.genero}}</span>
           <h2 class="fw-bold mb-1">{{productoSeleccionado.nombre}}</h2>
           <p class="text-muted small mb-3">Referencia: {{productoSeleccionado.codigo}}</p>
 
-          <h3 class="fw-bold text-success mb-4">{{ productoSeleccionado.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</h3>
+          <h3 class="fw-bold mb-4">{{ productoSeleccionado.precio | currency:'COP':'symbol-narrow':'1.0-0' }}</h3>
 
           <h6 class="fw-bold mb-2">Selecciona tu color:</h6>
           <select class="form-select mb-4 rounded-pill border-dark"

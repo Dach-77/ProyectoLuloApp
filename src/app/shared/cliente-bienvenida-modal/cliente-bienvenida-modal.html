@@ -1,0 +1,72 @@
+<div class="modal fade" tabindex="-1" #modalBienvenida aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content lulo-panel border-0">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h5 class="modal-title fw-bold mb-1">Únete a LuloApp 👋</h5>
+          <p class="text-muted small mb-0">
+            Regístrate o inicia sesión para ver tu historial de compras, tus facturas
+            y hacer seguimiento a tus pedidos.
+          </p>
+        </div>
+        <button type="button" class="btn-close" (click)="cerrar()" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body pt-3">
+        <ul class="nav nav-tabs lulo-tabs mb-4 justify-content-center">
+          <li class="nav-item">
+            <button type="button" class="nav-link" [class.active]="pestana() === 'login'" (click)="cambiarPestana('login')">
+              Iniciar sesión
+            </button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="nav-link" [class.active]="pestana() === 'registro'" (click)="cambiarPestana('registro')">
+              Crear cuenta
+            </button>
+          </li>
+        </ul>
+
+        <p class="text-danger small text-center" *ngIf="mensajeError()">{{ mensajeError() }}</p>
+
+        <form *ngIf="pestana() === 'login'" (ngSubmit)="onLogin()">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Correo</label>
+            <input type="email" class="form-control" name="emailLogin" [(ngModel)]="emailLogin" required autocomplete="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Contraseña</label>
+            <input type="password" class="form-control" name="passwordLogin" [(ngModel)]="passwordLogin" required autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold" [disabled]="cargando()">
+            {{ cargando() ? 'Ingresando...' : 'Iniciar sesión' }}
+          </button>
+        </form>
+
+        <form *ngIf="pestana() === 'registro'" (ngSubmit)="onRegistro()">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Nombre</label>
+            <input type="text" class="form-control" name="nombreRegistro" [(ngModel)]="nombreRegistro" required autocomplete="name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Correo</label>
+            <input type="email" class="form-control" name="emailRegistro" [(ngModel)]="emailRegistro" required autocomplete="email">
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Contraseña</label>
+            <input type="password" class="form-control" name="passwordRegistro" [(ngModel)]="passwordRegistro" required minlength="8" autocomplete="new-password">
+            <small class="text-muted">Mínimo 8 caracteres.</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Confirmar contraseña</label>
+            <input type="password" class="form-control" name="confirmarPasswordRegistro" [(ngModel)]="confirmarPasswordRegistro" required autocomplete="new-password">
+          </div>
+          <button type="submit" class="btn btn-success w-100 rounded-pill fw-bold" [disabled]="cargando()">
+            {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+          </button>
+        </form>
+
+        <button type="button" class="btn btn-link w-100 text-muted mt-2" (click)="cerrar()">Ahora no</button>
+      </div>
+    </div>
+  </div>
+</div>

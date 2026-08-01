@@ -47,6 +47,14 @@ export class Catalogo {
   modalTalla = '';
   modalColor = '';
 
+  // Si el color elegido en el modal tiene una foto propia, se muestra esa en vez de la general
+  get imagenModal(): string {
+    const producto = this.productoSeleccionado;
+    if (!producto) return '';
+    const imagenColor = producto.imagenesPorColor?.find(i => i.color === this.modalColor);
+    return imagenColor?.imagenUrl ?? producto.imagenUrl;
+  }
+
   constructor() {
     // Precarga el filtro de temporada cuando se llega desde una tarjeta de Inicio (?temporada=Verano).
     // Solo se lee una vez al crear el componente: se navega SIEMPRE aquí desde otra ruta (Inicio),
@@ -117,7 +125,10 @@ export class Catalogo {
       return;
     }
 
-    this.carritoService.agregarVarianteAlCarrito(producto, this.modalTalla, this.modalColor);
+    const agregado = this.carritoService.agregarVarianteAlCarrito(producto, this.modalTalla, this.modalColor);
+    if (!agregado) {
+      alert(`No quedan más unidades disponibles de ${producto.nombre} en talla ${this.modalTalla} y color ${this.modalColor}.`);
+    }
   }
 
   private valoresDistintos(productos: Producto[], selector: (p: Producto) => string[]): string[] {

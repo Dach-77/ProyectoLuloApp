@@ -1,0 +1,37 @@
+<div class="lulo-panel p-4 p-md-5">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h4 class="fw-bold mb-0">Pedidos recibidos</h4>
+    <span class="lulo-count-badge">{{ pedidos.length }} pedido(s)</span>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle lulo-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Productos</th>
+          <th>Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos">
+          <td>
+            <div class="fw-bold">{{ pedido.clienteNombre }}</div>
+            <div class="text-muted small">{{ pedido.clienteEmail }}</div>
+          </td>
+          <td>{{ pedido.fechaCreacion | date:'short' }}</td>
+          <td>
+            <div class="small" *ngFor="let item of pedido.items">
+              {{ item.cantidad }} × {{ item.nombreProducto }} ({{ item.talla }}, {{ item.color }})
+            </div>
+          </td>
+          <td class="fw-bold">{{ pedido.total | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+          <td><span class="badge bg-success-subtle text-success-emphasis rounded-pill px-3 py-2">{{ pedido.estado }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-muted small mb-0" *ngIf="!pedidos.length">Todavía no hay pedidos.</p>
+  </div>
+</div>

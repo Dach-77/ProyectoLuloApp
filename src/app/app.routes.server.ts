@@ -8,6 +8,12 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client
   },
   {
+    // Mismo motivo que 'admin': depende de un token de cliente en localStorage y llama
+    // a un endpoint autenticado (GET /api/pedidos/mios) que no puede resolverse en build time.
+    path: 'mis-pedidos',
+    renderMode: RenderMode.Client
+  },
+  {
     path: '**',
     renderMode: RenderMode.Prerender
   }

@@ -4,6 +4,11 @@ export interface StockItem {
   cantidad: number;
 }
 
+export interface ImagenColor {
+  color: string;
+  imagenUrl: string;
+}
+
 export interface Producto {
   id?: string;
   nombre: string;
@@ -19,4 +24,5 @@ export interface Producto {
   precio: number;
   imagenUrl: string;
   descripcion: string;
+  imagenesPorColor: ImagenColor[];
 }

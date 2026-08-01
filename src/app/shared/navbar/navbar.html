@@ -2,7 +2,8 @@
   <div class="container">
     <a class="navbar-brand fw-bold" routerLink="/">LuloApp</a>
     
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menú de navegación">
       <span class="navbar-toggler-icon"></span>
     </button>
     
@@ -26,10 +27,21 @@
             👤
           </button>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
-            <li *ngIf="!authService.estaAutenticado()"><a class="dropdown-item" routerLink="/login">🔐 Iniciar sesión</a></li>
+            <ng-container *ngIf="clienteAuthService.estaAutenticado(); else invitado">
+              <li><h6 class="dropdown-header">Hola, {{ clienteAuthService.cliente()?.nombre }}</h6></li>
+              <li><a class="dropdown-item" routerLink="/mis-pedidos">📦 Mis pedidos</a></li>
+              <li><button class="dropdown-item" type="button" (click)="cerrarSesionCliente()">🚪 Cerrar sesión</button></li>
+            </ng-container>
+            <ng-template #invitado>
+              <li><button class="dropdown-item" type="button" (click)="clienteAuthService.abrirPopup()">🔐 Iniciar sesión / Crear cuenta</button></li>
+            </ng-template>
             <li><a class="dropdown-item" routerLink="/configuraciones">⚙️ Configuraciones</a></li>
-            <li *ngIf="authService.estaAutenticado()"><a class="dropdown-item" routerLink="/admin">🛠️ Perfil de administrador</a></li>
-            <li *ngIf="authService.estaAutenticado()"><button class="dropdown-item" type="button" (click)="cerrarSesion()">🚪 Cerrar sesión</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li *ngIf="authService.estaAutenticado(); else accesoAdmin"><a class="dropdown-item" routerLink="/admin">🛠️ Perfil de administrador</a></li>
+            <ng-template #accesoAdmin>
+              <li><a class="dropdown-item" routerLink="/login">🛠️ Acceso administrador</a></li>
+            </ng-template>
+            <li *ngIf="authService.estaAutenticado()"><button class="dropdown-item" type="button" (click)="cerrarSesion()">🚪 Cerrar sesión admin</button></li>
           </ul>
         </div>
       </div>
@@ -41,7 +53,7 @@
   
   <div class="offcanvas-header border-bottom">
     <h5 class="offcanvas-title fw-bold">Tu Bolsa de Compras 🛍️</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>
   
   <div class="offcanvas-body d-flex flex-column">
@@ -75,10 +87,10 @@
                 <div class="input-group input-group-sm shadow-sm" style="width: 85px;">
                   <button class="btn btn-outline-dark bg-white" type="button" (click)="carritoService.restarCantidad(item.producto.id)">-</button>
                   <span class="input-group-text bg-white px-2 fw-bold">{{item.cantidad}}</span>
-                  <button class="btn btn-outline-dark bg-white" type="button" (click)="carritoService.agregarAlCarrito(item.producto)">+</button>
+                  <button class="btn btn-outline-dark bg-white" type="button" [disabled]="item.cantidad >= item.stockDisponible" title="No quedan más unidades disponibles" (click)="carritoService.agregarAlCarrito(item.producto)">+</button>
                 </div>
                 
-                <span class="fw-bold text-success">{{ (item.producto.precio * item.cantidad) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                <span class="fw-bold">{{ (item.producto.precio * item.cantidad) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </div>
 
             </div>
@@ -90,10 +102,10 @@
     <div class="border-top pt-4 mt-3 pb-2">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <span class="fs-5 text-muted">Total a pagar:</span>
-        <span class="fs-3 fw-bold text-success">{{ carritoService.obtenerTotal() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        <span class="fs-3 fw-bold">{{ carritoService.obtenerTotal() | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
       </div>
-      <button class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm" data-bs-dismiss="offcanvas" (click)="pagar()">
-        Proceder al Pago 💳
+      <button class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm" [disabled]="procesandoPago()" (click)="pagar()">
+        {{ procesandoPago() ? 'Procesando...' : 'Proceder al Pago 💳' }}
       </button>
     </div>
 

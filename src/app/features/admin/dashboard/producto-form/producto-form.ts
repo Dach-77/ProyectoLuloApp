@@ -13,14 +13,15 @@ import { Producto, StockItem } from '../../../../shared/models/producto.model';
 export class ProductoForm implements OnChanges {
   @Input() productoEditado: Producto | null = null;
 
-  @Output() guardar = new EventEmitter<{ producto: Producto; archivo: File | null }>();
+  @Output() guardar = new EventEmitter<{ producto: Producto; archivosPorColor: Record<string, File> }>();
   @Output() cancelar = new EventEmitter<void>();
   @Output() eliminar = new EventEmitter<void>();
 
   nuevoProducto: Producto = this.productoVacio();
 
-  // Variable para guardar temporalmente la foto que elijas de tu PC
-  archivoSeleccionado: File | null = null;
+  // No hay una foto "principal" por separado: cada color se sube por su cuenta (color
+  // -> archivo elegido en este guardado) y la primera se usa como portada del producto.
+  archivosPorColor: Record<string, File> = {};
 
   // Opciones fijas para los botones de selección (Materiales/Temporadas/Tallas/Colores/Género)
   readonly generoOpciones = ['Niño', 'Niña', 'Unisex'];
@@ -46,10 +47,11 @@ export class ProductoForm implements OnChanges {
             colores: [...producto.colores],
             materiales: [...producto.materiales],
             temporadas: [...producto.temporadas],
-            stock: producto.stock.map(s => ({ ...s }))
+            stock: producto.stock.map(s => ({ ...s })),
+            imagenesPorColor: producto.imagenesPorColor.map(i => ({ ...i }))
           }
         : this.productoVacio();
-      this.archivoSeleccionado = null;
+      this.archivosPorColor = {};
     }
   }
 
@@ -58,23 +60,30 @@ export class ProductoForm implements OnChanges {
   // otra prenda nueva después de registrar la anterior).
   resetFormulario() {
     this.nuevoProducto = this.productoVacio();
-    this.archivoSeleccionado = null;
+    this.archivosPorColor = {};
   }
 
   private productoVacio(): Producto {
     return {
       nombre: '', codigo: '', activo: true, genero: 'Unisex',
       materiales: [], temporadas: [], tallas: [], colores: [], stock: [],
-      precio: 0, imagenUrl: '', descripcion: ''
+      precio: 0, imagenUrl: '', descripcion: '', imagenesPorColor: []
     };
   }
 
-  // Esta función atrapa el archivo cuando lo seleccionas
-  seleccionarImagen(event: Event) {
+  // Foto para un color puntual: si no se sube ninguna, el catálogo muestra la portada
+  // del producto cuando el cliente elija ese color.
+  seleccionarImagenColor(event: Event, color: string) {
     const archivo = (event.target as HTMLInputElement).files?.[0];
     if (archivo) {
-      this.archivoSeleccionado = archivo;
+      this.archivosPorColor[color] = archivo;
+    } else {
+      delete this.archivosPorColor[color];
     }
+  }
+
+  imagenActualDeColor(color: string): string | null {
+    return this.nuevoProducto.imagenesPorColor.find(i => i.color === color)?.imagenUrl ?? null;
   }
 
   // --- Materiales / Temporadas / Tallas / Colores (botones tipo checkbox) ---
@@ -123,15 +132,29 @@ export class ProductoForm implements OnChanges {
     );
   }
 
+  // Si se subió una foto para un color y luego se deseleccionó ese color, no tiene
+  // sentido seguir enviándola.
+  private archivosPorColorVigentes(): Record<string, File> {
+    return Object.fromEntries(
+      Object.entries(this.archivosPorColor).filter(([color]) => this.nuevoProducto.colores.includes(color))
+    );
+  }
+
   onGuardar() {
-    // Al crear una prenda nueva la foto es obligatoria; al editar, se puede conservar la actual
-    if (!this.idEnEdicion && !this.archivoSeleccionado) {
-      alert('Por favor, selecciona una foto de la prenda primero 📸');
+    const fotosPorColor = this.archivosPorColorVigentes();
+
+    // Al crear una prenda nueva se necesita al menos una foto (de algún color) para
+    // tener una portada; al editar, se puede conservar la que ya tenía.
+    if (!this.idEnEdicion && Object.keys(fotosPorColor).length === 0) {
+      alert('Sube al menos una foto de color antes de guardar 📸');
       return;
     }
 
     this.nuevoProducto.stock = this.stockVigente();
-    this.guardar.emit({ producto: this.nuevoProducto, archivo: this.archivoSeleccionado });
+    this.guardar.emit({
+      producto: this.nuevoProducto,
+      archivosPorColor: fotosPorColor
+    });
   }
 
   onCancelar() {

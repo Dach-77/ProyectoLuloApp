@@ -26,10 +26,18 @@ export class Login {
     try {
       await this.authService.login(this.usuario, this.contrasena);
       this.router.navigateByUrl('/admin');
-    } catch {
-      this.mensajeError.set('Usuario o contraseña incorrectos.');
+    } catch (error) {
+      this.mensajeError.set(this.extraerMensajeError(error));
     } finally {
       this.cargando.set(false);
     }
+  }
+
+  private extraerMensajeError(error: unknown): string {
+    const httpError = error as { status?: number };
+    if (httpError?.status === 429) {
+      return 'Demasiados intentos. Espera un minuto e inténtalo de nuevo.';
+    }
+    return 'Usuario o contraseña incorrectos.';
   }
 }

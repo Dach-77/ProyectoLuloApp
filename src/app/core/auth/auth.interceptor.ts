@@ -5,7 +5,7 @@ import { AuthService } from './auth';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(AuthService).obtenerToken();
 
-  if (!token) {
+  if (!token || req.headers.has('Authorization')) {
     return next(req);
   }
 

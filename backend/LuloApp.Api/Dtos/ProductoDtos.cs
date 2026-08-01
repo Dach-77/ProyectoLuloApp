@@ -9,6 +9,12 @@ public class StockDto
     public int Cantidad { get; set; }
 }
 
+public class ImagenColorDto
+{
+    public string Color { get; set; } = string.Empty;
+    public string ImagenUrl { get; set; } = string.Empty;
+}
+
 public class ProductoDto
 {
     public Guid Id { get; set; }
@@ -25,9 +31,12 @@ public class ProductoDto
     public decimal Precio { get; set; }
     public string ImagenUrl { get; set; } = string.Empty;
     public string Descripcion { get; set; } = string.Empty;
+    public List<ImagenColorDto> ImagenesPorColor { get; set; } = new();
 }
 
-// Recibido como multipart/form-data desde el panel de administrador (incluye la foto).
+// Recibido como multipart/form-data desde el panel de administrador. No hay un campo de
+// "foto principal": las fotos llegan una por color (ver ExtraerFotosPorColor en
+// ProductosController) y la primera subida se usa como imagen de portada del producto.
 // Materiales y Temporadas llegan como CSV (ej: "Lino,Algodón" / "Verano,Otoño"); Stock llega como JSON:
 // [{"talla":"S","color":"Rojo","cantidad":10}, ...]
 public class ProductoFormRequest
@@ -50,8 +59,6 @@ public class ProductoFormRequest
 
     [StringLength(1000)]
     public string? Descripcion { get; set; }
-
-    public IFormFile? Foto { get; set; }
 }
 
 public class StockItemRequest

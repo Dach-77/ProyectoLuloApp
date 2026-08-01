@@ -23,14 +23,22 @@ public class JwtTokenService
         _options = options.Value;
     }
 
-    public (string Token, DateTime ExpiresAtUtc) GenerateToken(string username)
+    // "role" distingue Admin de Cliente: sin esto, un token de cliente podría llamar
+    // los endpoints [Authorize] del panel de administración (mismo issuer/audience/key).
+    public (string Token, DateTime ExpiresAtUtc) GenerateToken(string subject, string role, string? nameIdentifier = null)
     {
         var expiresAtUtc = DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes);
 
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Name, subject),
+            new Claim(ClaimTypes.Role, role)
         };
+
+        if (nameIdentifier is not null)
+        {
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, nameIdentifier));
+        }
 
         var credenciales = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key)),
